@@ -7,7 +7,9 @@
     <script type="text/javascript" src="script/svg.js"></script>
     <script type="text/javascript" src="script/svg.draggable.js"></script>
     <script type="text/javascript" src="script/svg.intersection.js"></script>
-    <script type="text/javascript" src="script/script.js"></script>
+    <script type="text/javascript" src="script/global.js"></script>
+    <script type="text/javascript" src="script/car.js"></script>
+    <!-- <script type="text/javascript" src="script/script.js"></script> -->
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
     <link rel="stylesheet" href="script/script.css">
@@ -15,12 +17,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
 </head>
 <body>
-<div class="row">
-    <!--<div class="col s5 offset-s1"></div>
-    <div class="col s5">-->
+    <div class="container">
         <div id="drawing"></div>
-   <!-- </div>
-</div>-->
-
+    </div>
 </body>
 </html>

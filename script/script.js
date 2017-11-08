@@ -3,7 +3,7 @@ $(document).ready(function(){
 
     // initialize SVG.js
     var draw = SVG('drawing');
-    // draw.height(350);
+    draw.height(350);
     
     // draw pink square
     var destination = draw.rect(100,100).move(600,50).fill('blue');
@@ -69,15 +69,6 @@ $(document).ready(function(){
     })
 
     rect.on('dragend', function(event){
-        var x = rect.attr('x');
-        var y = rect.attr('y');
-        var width = rect.attr('width');
-        var height = rect.attr('height');
-
-        var xD = destination.attr('x');
-        var yD = destination.attr('y');
-        var widthD = destination.attr('width');
-        var heightD = destination.attr('height');
 
         rect.move(100,50)
         tmp.remove()
@@ -94,16 +85,5 @@ $(document).ready(function(){
     })
 })
 
-
-
-function intersection(r,d)
-{
-    var tmp = false;
-    if((r.a.x>=d.a.x)&&(r.a.x<=d.b.x)&&(r.a.y>=d.a.y)&&(r.a.y<=d.c.y)) tmp = true;
-    if((r.b.x>=d.a.x)&&(r.b.x<=d.b.x)&&(r.b.y>=d.a.y)&&(r.b.y<=d.c.y)) tmp = true;
-    if((r.c.x>=d.a.x)&&(r.c.x<=d.b.x)&&(r.c.y>=d.a.y)&&(r.c.y<=d.c.y)) tmp = true;
-    if((r.d.x>=d.a.x)&&(r.d.x<=d.b.x)&&(r.d.y>=d.a.y)&&(r.d.y<=d.c.y)) tmp = true;
-    return tmp;
-}
 
 

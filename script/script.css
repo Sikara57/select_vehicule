@@ -1,3 +1,11 @@
+.container
+{
+    background-color: rgb(225, 217, 217);
+    width:600px;
+    height:450;
+    margin:auto;
+    padding : 50px;
+}
 #drawing
 {
     border: 1px solid black;
