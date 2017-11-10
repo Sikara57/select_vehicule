@@ -1,6 +1,7 @@
-var tmp;
+var tmp, car;
 var tabObj = {};
 var tabDestination = {};
+var total=0;
 
 function intersection(r,d)
 {
@@ -13,40 +14,42 @@ function intersection(r,d)
 }
 
 
-function initialize(text,draw,type)
+function initialize(draw,type)
 {
     switch (type) {
         case 'obj':
         {
             var box = draw.image('img/objet/box.png').size(30,30).move(10,10);
+            box.data('volume', { value: { data: 0.3 }});
             var cabinet = draw.image('img/objet/cabinet.png').size(30,30).move(60,10);
-            dragObj(text,draw,box);
-            dragObj(text,draw,cabinet);
+            cabinet.data('volume',{value : {data:1.5}});
+            dragObj(draw,box);
+            dragObj(draw,cabinet);
             break;
         }
         case 'car':
         {
-            var t1 = draw.image('img/car/T1.png').size(250,170).move(120,140);
+            car = draw.image('img/car/T1.png').size(250,170).move(120,140);
             tabDestination = {
                 a:
                 {
-                    x:t1.attr('x'),
-                    y:t1.attr('y')
+                    x:car.attr('x'),
+                    y:car.attr('y')
                 },
                 b:
                 {
-                    x:t1.attr('x')+t1.attr('width'),
-                    y:t1.attr('y')
+                    x:car.attr('x')+car.attr('width'),
+                    y:car.attr('y')
                 },
                 c:
                 {
-                    x:t1.attr('x'),
-                    y:t1.attr('y')+t1.attr('height')
+                    x:car.attr('x'),
+                    y:car.attr('y')+car.attr('height')
                 },
                 d:
                 {
-                    x:t1.attr('x')+t1.attr('width'),
-                    y:t1.attr('y')+t1.attr('height')
+                    x:car.attr('x')+car.attr('width'),
+                    y:car.attr('y')+car.attr('height')
                 }
             };
             break;
@@ -58,7 +61,7 @@ function initialize(text,draw,type)
     }
 }
 
-function dragObj(text,draw,obj)
+function dragObj(draw,obj)
 {
     obj.draggable();
     var departX = obj.attr('x');
@@ -101,11 +104,34 @@ function dragObj(text,draw,obj)
         obj.move(departX,departY)
         tmp.remove()
 
+        var volume = obj.data('volume').value.data;
+        
         if(intersection(tabObj,tabDestination))
         {
-            text.show()
+            total = total+volume;
+            console.log(total)
+            var text = draw.text('+' + JSON.stringify(volume));
+            text.font({size:'42'});
+            text.move(180,100);
             setTimeout(function(){text.hide()},500)
-            console.log('OVERLAP')
+
+            var newImg = changeImg(total);
+            car.attr('href',newImg)
+            // console.log(car.attr('href'))
+            // console.log('OVERLAP')
         } 
     })
+}
+
+function changeImg(total)
+{
+    if (total>=10 && total<20) {
+        return src='img/car/T2.png';
+        
+    } else if(total>=20 && total<30){
+        return src='img/car/T3.png';
+    }
+    else if(total>=30){
+        return src='img/car/T4.png';
+    }
 }
