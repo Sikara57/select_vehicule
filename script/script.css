@@ -6,7 +6,43 @@
     margin:auto;
     padding : 50px;
 }
+#nav
+{
+    width:500px;
+    height:20px;
+    margin-bottom:3px;
+}
+
+#nav span
+{
+    width:100px;
+    text-align: center;
+    display:inline-block;
+    border-top:1px solid black;
+    border-right:1px solid black;
+    box-sizing:border-box;
+}
+
+#nav span:first-child
+{
+    border-left:1px solid black;
+}
+
 #drawing
 {
     border: 1px solid black;
+}
+
+#myObject 
+{
+    padding:20px;
+    width:180px;
+    height:531px;
+    position:relative;
+    top:-531px;
+    left:853px;
+    background-color: rgb(225, 217, 217);
+    box-sizing: border-box;
+    border-left: 1px solid black;
+
 }
