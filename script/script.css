@@ -36,13 +36,23 @@
 #myObject 
 {
     padding:20px;
-    width:180px;
-    height:531px;
-    position:relative;
-    top:-531px;
-    left:853px;
+    width:600px;
     background-color: rgb(225, 217, 217);
     box-sizing: border-box;
-    border-left: 1px solid black;
+    border-top: 1px solid black;
+    margin:auto;
 
+}
+
+#myObject div
+{
+    display: inline-block;
+    width:100px;
+    margin-left:50px;
+}
+
+button
+{
+    margin-top:16px;
+    margin-bottom:100px
 }

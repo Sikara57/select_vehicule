@@ -32,13 +32,19 @@
         <div id="myObject">
             Mon Chargement :
             <form name="myObject">
-                <input type="text" name="Longueur" id="Longueur"><label for="Longueur">Longueur</label>
-                <input type="text" name="Largeur" id="Largeur"><label for="Largeur">Largeur</label>
-                <input type="text" name="Hauteur" id="Hauteur"><label for="Hauteur">Hauteur</label>
-                <input type="text" name="Poids" id="Poids"><label for="Poids">Poids</label>
-                <input type="text" name="Volume" id="Volume"><label for="Volume">Volume</label>
+                <div>
+                    <input type="text" name="Longueur" id="Longueur"><label for="Longueur">Longueur</label>
+                    <input type="text" name="Largeur" id="Largeur"><label for="Largeur">Largeur</label>
+                </div>
+                <div>
+                    <input type="text" name="Hauteur" id="Hauteur"><label for="Hauteur">Hauteur</label>
+                    <input type="text" name="Poids" id="Poids"><label for="Poids">Poids</label>
+                </div>
+                <div>
+                    <input type="text" name="Volume" id="Volume"><label for="Volume">Volume</label>
+                    <button id="addObject" class="btn">Ajouter</button>
+                </div>
             </form>
-            <button id="addObject">Ajouter</button>
         </div> 
     </div>
 </body>
