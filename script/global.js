@@ -1,9 +1,9 @@
 var tmp, car;
 var tabObj = {};
 var tabDestination = {};
-var total={poids:0,volume:0,vehicule:1};
+var total={poids:0,volume:0,vehicule:0,longueur:0,largeur:0,hauteur:0};
 
-// Fonctioin qui permet de detecter le passage de l'image de l'objet au dessus de celle du véhicule
+// Fonction qui permet de detecter le passage de l'image de l'objet au dessus de celle du véhicule
 function intersection(r,d)
 {
     var boolean = false;
@@ -14,25 +14,56 @@ function intersection(r,d)
     return boolean;
 }
 
-// Fonction qui permet de faire le total des attributs dans le camion
+// Fonction qui permet de faire le total des attributs dans le camion et de sélectionner l'image à afficher
 function addObj(total,obj)
 {
+    var poids = 0,volume = 0,vehicule = total.vehicule;
 
     if(total.vehicule<obj.vehicule)
     {
+        // si les caractéristiques de l'objet impose un type de véhicule on change forcément l'image
+        car.attr('href',vehicules[obj.vehicule].img)
         var tmp = {
             poids: total.poids+obj.poids,
             volume: total.volume+obj.volume,
-            vehicule:obj.vehicule
+            vehicule:obj.vehicule,
+            longueur:vehicules[obj.vehicule].longueur,
+            largeur:vehicules[obj.vehicule].largeur,
+            hauteur:vehicules[obj.vehicule].hauteur
         };
     }
     else
     {
+        // On créé l'objet image temporaire additionnant les poids, les volumes, les caractéristiques de l'obj et le type du véhicule
         var tmp = {
             poids: total.poids+obj.poids,
             volume: total.volume+obj.volume,
-            vehicule:total.vehicule
+            vehicule:total.vehicule,
+            longueur:obj.longueur,
+            largeur:obj.largeur,
+            hauteur:obj.hauteur
         };
+
+        for (let index = 0; index < vehicules.length; index++) {
+            // On parcours l'ensemble des véhicules enregistrés et on cherche le véhicule qui peut contenir l'objet
+            var element = vehicules[index];
+            if(element.hauteur>=tmp.hauteur && element.largeur>=tmp.largeur && element.longueur>=tmp.longueur && element.poids>tmp.poids && element.volume>=tmp.volume)
+            {   // Soit il existe et on change l'image et les  attributs de total
+                tmp.vehicule = vehicules.indexOf(element);
+                tmp.longueur = element.longueur;
+                tmp.largeur = element.largeur;
+                tmp.hauteur = element.hauteur;
+                car.attr('href',vehicules[tmp.vehicule].img);
+                break;
+            }
+            else
+            {   // Soit il existe pas et on affiche notre incapacité à satisfaire la demande
+                car.attr('href','img/car/noCar.png');
+                draw.text('Aucun véhicule disponible correspondant au critère,').font({size:'20'}).move(30,300);
+                draw.text('Merci de nous contacter.').font({size:'20'}).move(120,320);
+            }
+        }
+
     }
 
     return tmp;
@@ -44,97 +75,54 @@ function addObj(total,obj)
 function initialize(draw,type)
 {
     /*
-        Les types de véhicules vont de 1 à 4 et le T4P est le numéro 5
+        Les types de véhicules vont de 0 à 3 et le T4P est le numéro 4
     */
-    switch (type) {
-        case 'palette':
-        {
-            var palette = draw.image('img/objet/palette.png').size(80,90).move(20,10);
-            palette.data('caracteristique', { value :{longueur:0.8, largueur:1.2, hauteur:1, poids:200,volume:0.96,vehicule:1}});
-            var msg = draw.text('Palette \n (0.8 x 1.2 x 1) \n 200kg').font({size:'10'}).move(20,90);
 
-            var palette1 = draw.image('img/objet/palette.png').size(80,90).move(150,10);
-            palette1.data('caracteristique', { value :{longueur:0.8, largueur:1.2, hauteur:2, poids:500,volume:1.92,vehicule:4}});
-            var msg1 = draw.text('Palette \n (0.8 x 1.2 x 2) \n 500kg').font({size:'10'}).move(150,90);
+    if(type!='car')
+    {
+        var x=20,y=10,z=1;
+        objet[type].forEach(function(elt){
+            var image =
+            draw.image(elt.img.adr)
+                .size(elt.img.width,elt.img.height)
+                .move(x,y)
+                .data('caracteristique',{value:{longueur:elt.longueur,largeur:elt.largeur,hauteur:elt.hauteur,poids:elt.poids,volume:elt.volume,vehicule:elt.type_vehicule}});
+
+            draw.text(elt.name+' \n ('+elt.longueur+' x '+elt.largeur+' x '+elt.hauteur+')\n'+elt.poids+'kg')
+                .font({size:10})
+                .move(x,y+80);
             
-            var palette2 = draw.image('img/objet/palette.png').size(80,90).move(270,10);
-            palette2.data('caracteristique', { value :{longueur:0.8, largueur:1.2, hauteur:1.5, poids:300,volume:1.44,vehicule:2}});
-            var msg1 = draw.text('Palette \n (0.8 x 1.2 x 1.5) \n 300kg').font({size:'10'}).move(270,90);
-            
-            var palette3 = draw.image('img/objet/palette.png').size(80,90).move(390,10);
-            palette3.data('caracteristique', { value :{longueur:1, largueur:0.8, hauteur:1.7, poids:200,volume:1.36,vehicule:3}});
-            var msg1 = draw.text('Palette \n (1 x 0.8 x 1.7) \n 200kg').font({size:'10'}).move(390,90);
-            
-            dragObj(draw,palette);
-            dragObj(draw,palette1);
-            dragObj(draw,palette2);
-            dragObj(draw,palette3);
-            break;
-        }
-        case 'tube':
-        {
-            var tube = draw.image('img/objet/tube.png').size(70,50).move(20,10);
-            tube.data('caracteristique', { value :{longueur:9, largueur:0, hauteur:9, poids:400,volume:0,vehicule:5}});
-            var msg = draw.text('Tube \n 9m \n 400kg').font({size:'10'}).move(20,70);
-
-            var tube1 = draw.image('img/objet/tube.png').size(70,50).move(150,10);
-            tube1.data('caracteristique', { value :{longueur:7, largueur:0, hauteur:0, poids:700,volume:0,vehicule:5}});
-            var msg1 = draw.text('Tube \n 7m \n 700kg').font({size:'10'}).move(150,70);
-
-            dragObj(draw,tube);
-            dragObj(draw,tube1);
-            break;
-        }
-        case 'divers':
-        {
-            var divers = draw.image('img/objet/cadre.png').size(80,90).move(20,10);
-            divers.data('caracteristique', { value :{longueur:1.8, largueur:0.8, hauteur:2.2, poids:300,volume:3.17,vehicule:4}});
-            var msg = draw.text('Cadre \n (1.8 x 0.8 x 2.2) \n 300kg').font({size:'10'}).move(20,90);
-
-            var divers1 = draw.image('img/objet/bac.png').size(80,90).move(150,10);
-            divers1.data('caracteristique', { value :{longueur:1, largueur:1.2, hauteur:1, poids:200,volume:1.2,vehicule:2}});
-            var msg1 = draw.text('Bac \n (1 x 1.2 x 1) \n 200kg').font({size:'10'}).move(150,90);
-            
-            var divers2 = draw.image('img/objet/boite_elec.png').size(80,80).move(270,10);
-            divers2.data('caracteristique', { value :{longueur:1, largueur:2, hauteur:2, poids:200,volume:2,vehicule:4}});
-            var msg1 = draw.text('Boite Electrique \n (1 x 1 x 2) \n 200kg').font({size:'10'}).move(270,90);
-
-            dragObj(draw,divers);
-            dragObj(draw,divers1);
-            dragObj(draw,divers2);
-            break;
-        }
-        case 'car':
-        {
-            car = draw.image('img/car/T1.png').size(250,170).move(120,240);
-            tabDestination = {
-                a:
-                {
-                    x:car.attr('x'),
-                    y:car.attr('y')
-                },
-                b:
-                {
-                    x:car.attr('x')+car.attr('width'),
-                    y:car.attr('y')
-                },
-                c:
-                {
-                    x:car.attr('x'),
-                    y:car.attr('y')+car.attr('height')
-                },
-                d:
-                {
-                    x:car.attr('x')+car.attr('width'),
-                    y:car.attr('y')+car.attr('height')
-                }
-            };
-            break;
-        }   
-        default:
-        {
-            break;
-        }
+            x+=120;
+            z++;
+            dragObj(draw,image);
+            if(z==5){x=10;y=130}
+        });
+    }
+    else
+    {
+        car = draw.image('img/car/T1.png').size(250,170).move(120,240);
+        tabDestination = {
+            a:
+            {
+                x:car.attr('x'),
+                y:car.attr('y')
+            },
+            b:
+            {
+                x:car.attr('x')+car.attr('width'),
+                y:car.attr('y')
+            },
+            c:
+            {
+                x:car.attr('x'),
+                y:car.attr('y')+car.attr('height')
+            },
+            d:
+            {
+                x:car.attr('x')+car.attr('width'),
+                y:car.attr('y')+car.attr('height')
+            }
+        };
     }
 }
 
@@ -182,52 +170,16 @@ function dragObj(draw,obj)
         obj.move(departX,departY)
         tmp.remove()
 
-        console.log(obj.data('caracteristique').value);
+        // console.log(obj.data('caracteristique').value);
         
         if(intersection(tabObj,tabDestination))
         {
             total = addObj(total,obj.data('caracteristique').value)
-            console.log(total)
+            // console.log(total)
             var text = draw.text('+1');
             text.font({size:'42'});
             text.move(180,200);
-            setTimeout(function(){text.hide()},500)
-
-            var newImg = changeImg(total);
-            if(newImg!=car.attr('href'))
-            {
-                car.attr('href',newImg)
-            }
+            setTimeout(function(){text.hide()},500);
         } 
     })
-}
-
-// Fonction qui permet de déterminer quelle image afficher
-function changeImg(total)
-{
-    switch (total.vehicule) {
-        case 2:
-        {
-            return src='img/car/T2.png';
-            break;
-        }
-        case 3:
-        {
-            return src='img/car/T3.png';
-            break;
-        }
-        case 4:
-        {
-            return src='img/car/T4.png';
-            break;
-        }
-        case 5:
-        {
-            return src='img/car/T4P.png';
-            break;
-        }
-        default:
-            break;
-    }
-
 }
