@@ -1,8 +1,8 @@
 .container
 {
     background-color: rgb(225, 217, 217);
-    width:600px;
-    height:450;
+    width:800px;
+    height:550px;
     margin:auto;
     padding : 50px;
 }
@@ -31,17 +31,34 @@
 #drawing
 {
     border: 1px solid black;
+    width:500px;
+    height:400px;
 }
 
 #myObject 
 {
     padding:20px;
-    width:600px;
+    width:800px;
     background-color: rgb(225, 217, 217);
     box-sizing: border-box;
     border-top: 1px solid black;
     margin:auto;
 
+}
+
+#disclaimer
+{
+    width:500px;
+}
+
+#recap
+{
+    width:200px;
+    height:408px;
+    position:relative;
+    left:530px;
+    top:-450px;
+    overflow: auto;
 }
 
 #myObject div
@@ -51,8 +68,19 @@
     margin-left:50px;
 }
 
+#detail
+{
+    font-size:10px;
+}
+
 button
 {
     margin-top:16px;
     margin-bottom:100px
+}
+
+
+.collection-item:hover
+{
+    background-color: #cdcdcd;
 }

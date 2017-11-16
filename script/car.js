@@ -1,6 +1,10 @@
 $(document).ready(function(){
-    draw = SVG('drawing').size(600,400);
+    var nbre = 0;
+
+    draw = SVG('drawing').size(500,400);
     $('#myObject').hide();
+    $('#recap').hide();
+
     initialize(draw,'car');
 
     $('#nav span').on('click',function(){
@@ -39,22 +43,32 @@ $(document).ready(function(){
     });
 
     $('#addObject').on('click',function(){
+        event.preventDefault();
+        nbre++;
         var tmp = {
-            longueur:$('#Longueur').val(),
-            largeur:$('#Largeur').val(),
-            hauteur:$('#Hauteur').val(),
-            volume:$('#Volume').val(),
-            poids:$('#Poids').val()
+            longueur:parseFloat($('#Longueur').val()),
+            largeur:parseFloat($('#Largeur').val()),
+            hauteur:parseFloat($('#Hauteur').val()),
+            volume:parseFloat($('#Volume').val()),
+            poids:parseFloat($('#Poids').val()),
+            vehicule:0,
+            name:'Mon chargement '+ nbre
         };
 
-        var text = draw.text('+1');
-        text.font({size:'42'});
-        text.move(180,200);
-        setTimeout(function(){text.hide()},500)
+        total = addObjUser(total,tmp);
 
-        console.log(tmp);
-        $('#myObject').hide();
+        console.log(total);
+        // $('#myObject').hide();
         // total = 
     });
 
+    $('#Longueur,#Largeur,#Hauteur').on('change',function(){
+        var largeur = $('#Largeur').val();
+        var longueur = $('#Longueur').val();
+        var hauteur = $('#Hauteur').val();
+        var tmp = Math.round(largeur*hauteur*longueur*100);
+        $('#Volume').val(tmp/100);
+    })
+
 })
+

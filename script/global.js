@@ -14,10 +14,10 @@ function intersection(r,d)
     return boolean;
 }
 
-// Fonction qui permet de faire le total des attributs dans le camion et de sélectionner l'image à afficher
+// Fonction qui permet de faire le total des attributs dans le camion et de sélectionner l'image à afficher avec des objets dans les datas
 function addObj(total,obj)
 {
-    var poids = 0,volume = 0,vehicule = total.vehicule;
+    var poids = 0,volume = 0,vehicule = total.vehicule, find=false;
 
     if(total.vehicule<obj.vehicule)
     {
@@ -31,6 +31,7 @@ function addObj(total,obj)
             largeur:vehicules[obj.vehicule].largeur,
             hauteur:vehicules[obj.vehicule].hauteur
         };
+        find = true;
     }
     else
     {
@@ -54,22 +55,77 @@ function addObj(total,obj)
                 tmp.largeur = element.largeur;
                 tmp.hauteur = element.hauteur;
                 car.attr('href',vehicules[tmp.vehicule].img);
+                find=true;
                 break;
-            }
-            else
-            {   // Soit il existe pas et on affiche notre incapacité à satisfaire la demande
-                car.attr('href','img/car/noCar.png');
-                draw.text('Aucun véhicule disponible correspondant au critère,').font({size:'20'}).move(30,300);
-                draw.text('Merci de nous contacter.').font({size:'20'}).move(120,320);
             }
         }
 
     }
 
-    return tmp;
- 
+    if(find==true)
+    {
+        $('.collection').append('<li class="collection-item">'+ obj.name +'<i class="material-icons right suprChargement">close</i> <br> <span id="detail">(' + obj.longueur + ' x ' + obj.largeur + ' x ' + obj.hauteur + ') ' + obj.poids + 'kg</span></li>');
+        $('.suprChargement').on('click',function(){
+            $(this).parent().remove();
+        })
+        $('#recap').show();
+        return tmp;
+    }
+    else
+    {
+        car.attr('href','img/car/noCar.png');
+        draw.text('Aucun véhicule disponible correspondant au critère,').font({size:'20'}).move(30,300);
+        draw.text('Merci de nous contacter.').font({size:'20'}).move(120,320);
+    }
 }
 
+// Fonction qui permet d'ajouter un objet inventé par l'utilisateurs
+function addObjUser(total,obj)
+{
+    var find=false;
+    var tmp = {
+        poids: total.poids+obj.poids,
+        volume: total.volume+obj.volume,
+        vehicule:total.vehicule,
+        longueur:obj.longueur,
+        largeur:obj.largeur,
+        hauteur:obj.hauteur
+    };
+    
+    for (let index = 0; index < vehicules.length; index++) {
+        // On parcours l'ensemble des véhicules enregistrés et on cherche le véhicule qui peut contenir l'objet
+        var element = vehicules[index];
+        if(element.hauteur>=tmp.hauteur && element.largeur>=tmp.largeur && element.longueur>=tmp.longueur && element.poids>tmp.poids && element.volume>=tmp.volume)
+        {   // Soit il existe et on change l'image et les  attributs de total
+            tmp.vehicule = vehicules.indexOf(element);
+            tmp.longueur = element.longueur;
+            tmp.largeur = element.largeur;
+            tmp.hauteur = element.hauteur;
+            car.attr('href',vehicules[tmp.vehicule].img);
+            find=true;
+            break;
+        }
+    }
+
+    if(find==true)
+    {
+        $('.collection').append('<li class="collection-item">'+ obj.name +'<i class="material-icons right suprChargement">close</i> <br> <span id="detail">(' + obj.longueur + ' x ' + obj.largeur + ' x ' + obj.hauteur + ') ' + obj.poids + 'kg</span></li>');
+        $('.suprChargement').on('click',function(){
+            $(this).parent().remove()
+        })
+        $('#recap').show();
+        return tmp;
+    }
+    else
+    {   // Soit il existe pas et on affiche notre incapacité à satisfaire la demande
+        car.attr('href','img/car/noCar.png');
+        console.log('prout')
+        draw.text('Aucun véhicule disponible correspondant au critère,').font({size:'20'}).move(30,300);
+        draw.text('Merci de nous contacter.').font({size:'20'}).move(120,320);
+        return tmp;
+    }
+
+}
 
 // Fonction qui permet de déssiner les images
 function initialize(draw,type)
@@ -86,7 +142,7 @@ function initialize(draw,type)
             draw.image(elt.img.adr)
                 .size(elt.img.width,elt.img.height)
                 .move(x,y)
-                .data('caracteristique',{value:{longueur:elt.longueur,largeur:elt.largeur,hauteur:elt.hauteur,poids:elt.poids,volume:elt.volume,vehicule:elt.type_vehicule}});
+                .data('caracteristique',{value:{name:elt.name,longueur:elt.longueur,largeur:elt.largeur,hauteur:elt.hauteur,poids:elt.poids,volume:elt.volume,vehicule:elt.type_vehicule}});
 
             draw.text(elt.name+' \n ('+elt.longueur+' x '+elt.largeur+' x '+elt.hauteur+')\n'+elt.poids+'kg')
                 .font({size:10})
@@ -175,11 +231,26 @@ function dragObj(draw,obj)
         if(intersection(tabObj,tabDestination))
         {
             total = addObj(total,obj.data('caracteristique').value)
-            // console.log(total)
+            console.log(total)
             var text = draw.text('+1');
             text.font({size:'42'});
             text.move(180,200);
             setTimeout(function(){text.hide()},500);
         } 
     })
+}
+
+
+function suprObj(total,obj)
+{
+    var tmp = {
+        poids: total.poids-obj.poids,
+        volume: total.volume-obj.volume,
+        vehicule:total.vehicule,
+        longueur:obj.longueur,
+        largeur:obj.largeur,
+        hauteur:obj.hauteur
+    };
+
+    return tmp;
 }

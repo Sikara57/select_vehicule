@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>SVG</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="lib/svg.js"></script>
     <script type="text/javascript" src="lib/svg.draggable.js"></script>
@@ -29,7 +30,14 @@
             </div>   
             <div id="drawing">
             </div>
-            <i>Ces informations sont données à titre indicatf, pour convenir d'une course il est nécessaire de contacter nos services.</i>
+            <div id="disclaimer">
+                <i>Ces informations sont données à titre indicatf, pour convenir d'une course il est nécessaire de contacter nos services.</i>
+            </div>
+            <div id="recap">
+                <ul class="collection">
+                    
+                </ul>
+            </div>
         </div>
         <div id="myObject">
             Mon Chargement :
@@ -43,7 +51,7 @@
                     <input type="text" name="Poids" id="Poids"><label for="Poids">Poids</label>
                 </div>
                 <div>
-                    <input type="text" name="Volume" id="Volume"><label for="Volume">Volume</label>
+                    <input type="text" name="Volume" id="Volume" readonly><label for="Volume">Volume</label>
                     <button id="addObject" class="btn">Ajouter</button>
                 </div>
             </form>
