@@ -46,6 +46,7 @@ $(document).ready(function(){
         event.preventDefault();
         nbre++;
         var tmp = {
+            id:Date.now(),
             longueur:parseFloat($('#Longueur').val()),
             largeur:parseFloat($('#Largeur').val()),
             hauteur:parseFloat($('#Hauteur').val()),
@@ -57,9 +58,11 @@ $(document).ready(function(){
 
         total = addObjUser(total,tmp);
 
-        console.log(total);
-        // $('#myObject').hide();
-        // total = 
+        $('.collection').append('<li class="collection-item">'+ tmp.name +'<i class="material-icons right"  data-id="'+tmp.id+'">close</i> <br> <span id="detail">(' + tmp.longueur + ' x ' + tmp.largeur + ' x ' + tmp.hauteur + ') ' + tmp.poids + 'kg</span></li>');
+        $('[data-id="'+tmp.id+'"]').on('click',function(){
+            total=suprObj($(this).attr('data-id'));
+        })
+        $('#recap').show();
     });
 
     $('#Longueur,#Largeur,#Hauteur').on('change',function(){

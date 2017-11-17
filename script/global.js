@@ -1,7 +1,8 @@
 var tmp, car;
 var tabObj = {};
 var tabDestination = {};
-var total={poids:0,volume:0,vehicule:0,longueur:0,largeur:0,hauteur:0};
+var total={poids:0,volume:0,vehicule:0,longueur:0,largeur:0,hauteur:0,chargement:[]};
+var id =0;
 
 // Fonction qui permet de detecter le passage de l'image de l'objet au dessus de celle du véhicule
 function intersection(r,d)
@@ -18,7 +19,6 @@ function intersection(r,d)
 function addObj(total,obj)
 {
     var poids = 0,volume = 0,vehicule = total.vehicule, find=false;
-
     if(total.vehicule<obj.vehicule)
     {
         // si les caractéristiques de l'objet impose un type de véhicule on change forcément l'image
@@ -29,7 +29,8 @@ function addObj(total,obj)
             vehicule:obj.vehicule,
             longueur:vehicules[obj.vehicule].longueur,
             largeur:vehicules[obj.vehicule].largeur,
-            hauteur:vehicules[obj.vehicule].hauteur
+            hauteur:vehicules[obj.vehicule].hauteur,
+            chargement:total.chargement
         };
         find = true;
     }
@@ -42,15 +43,16 @@ function addObj(total,obj)
             vehicule:total.vehicule,
             longueur:obj.longueur,
             largeur:obj.largeur,
-            hauteur:obj.hauteur
+            hauteur:obj.hauteur,
+            chargement:total.chargement
         };
 
         for (let index = 0; index < vehicules.length; index++) {
             // On parcours l'ensemble des véhicules enregistrés et on cherche le véhicule qui peut contenir l'objet
             var element = vehicules[index];
-            if(element.hauteur>=tmp.hauteur && element.largeur>=tmp.largeur && element.longueur>=tmp.longueur && element.poids>tmp.poids && element.volume>=tmp.volume)
+            if(element.poids>tmp.poids && element.volume>=tmp.volume)
             {   // Soit il existe et on change l'image et les  attributs de total
-                tmp.vehicule = vehicules.indexOf(element);
+                if(vehicules.indexOf(element)>tmp.vehicule) tmp.vehicule = vehicules.indexOf(element);
                 tmp.longueur = element.longueur;
                 tmp.largeur = element.largeur;
                 tmp.hauteur = element.hauteur;
@@ -64,18 +66,14 @@ function addObj(total,obj)
 
     if(find==true)
     {
-        $('.collection').append('<li class="collection-item">'+ obj.name +'<i class="material-icons right suprChargement">close</i> <br> <span id="detail">(' + obj.longueur + ' x ' + obj.largeur + ' x ' + obj.hauteur + ') ' + obj.poids + 'kg</span></li>');
-        $('.suprChargement').on('click',function(){
-            $(this).parent().remove();
-        })
-        $('#recap').show();
         return tmp;
     }
     else
     {
         car.attr('href','img/car/noCar.png');
-        draw.text('Aucun véhicule disponible correspondant au critère,').font({size:'20'}).move(30,300);
-        draw.text('Merci de nous contacter.').font({size:'20'}).move(120,320);
+        draw.text('Aucun véhicule ne semble correspondre aux critères,').font({size:'20'}).move(30,300).attr('data-warning','yes');
+        draw.text('Merci de nous contacter.').font({size:'20'}).move(120,320).attr('data-warning','yes');
+        return tmp;
     }
 }
 
@@ -89,7 +87,8 @@ function addObjUser(total,obj)
         vehicule:total.vehicule,
         longueur:obj.longueur,
         largeur:obj.largeur,
-        hauteur:obj.hauteur
+        hauteur:obj.hauteur,
+        chargement:total.chargement
     };
     
     for (let index = 0; index < vehicules.length; index++) {
@@ -109,19 +108,13 @@ function addObjUser(total,obj)
 
     if(find==true)
     {
-        $('.collection').append('<li class="collection-item">'+ obj.name +'<i class="material-icons right suprChargement">close</i> <br> <span id="detail">(' + obj.longueur + ' x ' + obj.largeur + ' x ' + obj.hauteur + ') ' + obj.poids + 'kg</span></li>');
-        $('.suprChargement').on('click',function(){
-            $(this).parent().remove()
-        })
-        $('#recap').show();
         return tmp;
     }
     else
     {   // Soit il existe pas et on affiche notre incapacité à satisfaire la demande
         car.attr('href','img/car/noCar.png');
-        console.log('prout')
-        draw.text('Aucun véhicule disponible correspondant au critère,').font({size:'20'}).move(30,300);
-        draw.text('Merci de nous contacter.').font({size:'20'}).move(120,320);
+        draw.text('Aucun véhicule ne semble correspondre aux critères,').font({size:'20'}).move(30,300).attr('data-warning','yes');
+        draw.text('Merci de nous contacter.').font({size:'20'}).move(120,320).attr('data-warning','yes');
         return tmp;
     }
 
@@ -230,8 +223,19 @@ function dragObj(draw,obj)
         
         if(intersection(tabObj,tabDestination))
         {
-            total = addObj(total,obj.data('caracteristique').value)
-            console.log(total)
+            var objCarac = obj.data('caracteristique').value;
+            total = addObj(total,objCarac);
+            objCarac.id = Date.now();
+            total.chargement.push(objCarac);
+            // console.log(total.chargement);
+
+            $('.collection').append('<li class="collection-item">'+ objCarac.name +'<i class="material-icons right"  data-id="'+objCarac.id+'">close</i> <br> <span id="detail">(' + objCarac.longueur + ' x ' + objCarac.largeur + ' x ' + objCarac.hauteur + ') ' + objCarac.poids + 'kg</span></li>');
+            $('[data-id="'+objCarac.id+'"]').on('click',function(){
+                total=suprObj($(this).attr('data-id'));
+                // console.log(total)
+            })
+            $('#recap').show();
+
             var text = draw.text('+1');
             text.font({size:'42'});
             text.move(180,200);
@@ -240,17 +244,86 @@ function dragObj(draw,obj)
     })
 }
 
-
-function suprObj(total,obj)
+function suprObj(id)
 {
-    var tmp = {
-        poids: total.poids-obj.poids,
-        volume: total.volume-obj.volume,
-        vehicule:total.vehicule,
-        longueur:obj.longueur,
-        largeur:obj.largeur,
-        hauteur:obj.hauteur
-    };
+    var obj;
+    // Suppression du DOM
+    $('[data-id="'+id+'"]').parent().remove();
+    $('text[data-warning="yes"]').remove();
 
-    return tmp;
+    // Recherche de l'objet avec notre id
+    for (let index = 0; index < total.chargement.length; index++) {
+        const elt = total.chargement[index];
+        if(elt.id==id)
+        {
+            obj=elt;
+        }
+    }
+
+    // Suppression de l'objet dans le chargement
+    var position = total.chargement.indexOf(obj);
+    total.chargement.splice(position,1);
+
+    // On vérifie si il y a encore un chargement ou plusieurs
+    if(total.chargement.length>1)
+    {
+        // On calcul les nouvelles caractéristiques du chargement puis on choisi les dimensions les plus grandes
+        total =
+        {
+            poids:total.poids-obj.poids,
+            volume:total.volume-obj.volume,
+            vehicule:0,
+            longueur:0,
+            largeur:0,
+            hauteur:0,
+            chargement:total.chargement
+        };
+
+        for (let index = 0; index < total.chargement.length; index++) {
+            var elt = total.chargement[index];
+            if(total.vehicule<=elt.vehicule)
+            {
+                total.vehicule = elt.vehicule;
+                total.longueur = elt.longueur;
+                total.largeur = elt.largeur;
+                total.hauteur = elt.hauteur;
+            }            
+        }
+
+        // En faisant le parcours précédent on ne prends pas en compte le nouveau poids
+        for (let index = 0; index < vehicules.length; index++) {
+            // On parcours l'ensemble des véhicules enregistrés et on cherche le véhicule qui peut contenir l'objet
+            var element = vehicules[index];
+            if(element.hauteur>=total.hauteur && element.largeur>=total.largeur && element.longueur>=total.longueur && element.poids>total.poids && element.volume>=total.volume)
+            {   // Soit il existe et on change l'image et les  attributs de total
+                if(vehicules.indexOf(element)>total.vehicule) total.vehicule = vehicules.indexOf(element);
+                total.longueur = element.longueur;
+                total.largeur = element.largeur;
+                total.hauteur = element.hauteur;
+                break;
+            }
+        }
+    }
+    else if(total.chargement.length==1)
+    {
+        total =
+        {
+            poids:total.chargement[0].poids,
+            volume:total.chargement[0].volume,
+            vehicule:total.chargement[0].vehicule,
+            longueur:total.chargement[0].longueur,
+            largeur:total.chargement[0].largeur,
+            hauteur:total.chargement[0].hauteur,
+            chargement:total.chargement
+        };
+    }
+    else
+    {
+        total = {poids:0,volume:0,vehicule:0,longueur:0,largeur:0,hauteur:0,chargement:[]};
+    }
+
+    car.attr('href',vehicules[total.vehicule].img);
+
+    return total;
+
 }

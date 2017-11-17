@@ -39,7 +39,7 @@ const vehicules = [
         'type':'T4P',
         'longueur':6,
         'largeur':2,
-        'hauteur':1,
+        'hauteur':3,
         'volume':11.7,
         'poids':1100,
         'img':'img/car/T4P.png'
