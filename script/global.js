@@ -21,8 +21,7 @@ function addObj(total,obj)
     var poids = 0,volume = 0,vehicule = total.vehicule, find=false;
     if(total.vehicule<obj.vehicule)
     {
-        // si les caractéristiques de l'objet impose un type de véhicule on change forcément l'image
-        car.attr('href',vehicules[obj.vehicule].img)
+        // si les caractéristiques de l'objet impose un type de véhicule on change forcément l'image mais on vérifie le poids
         var tmp = {
             poids: total.poids+obj.poids,
             volume: total.volume+obj.volume,
@@ -32,7 +31,7 @@ function addObj(total,obj)
             hauteur:vehicules[obj.vehicule].hauteur,
             chargement:total.chargement
         };
-        find = true;
+                
     }
     else
     {
@@ -50,18 +49,22 @@ function addObj(total,obj)
         for (let index = 0; index < vehicules.length; index++) {
             // On parcours l'ensemble des véhicules enregistrés et on cherche le véhicule qui peut contenir l'objet
             var element = vehicules[index];
-            if(element.poids>tmp.poids && element.volume>=tmp.volume)
+            if(element.hauteur>=total.hauteur && element.largeur>=total.largeur && element.longueur>=total.longueur && element.poids>tmp.poids && element.volume>=tmp.volume)
             {   // Soit il existe et on change l'image et les  attributs de total
                 if(vehicules.indexOf(element)>tmp.vehicule) tmp.vehicule = vehicules.indexOf(element);
                 tmp.longueur = element.longueur;
                 tmp.largeur = element.largeur;
                 tmp.hauteur = element.hauteur;
-                car.attr('href',vehicules[tmp.vehicule].img);
-                find=true;
                 break;
             }
         }
 
+    }
+
+    if(vehicules[tmp.vehicule].poids>=tmp.poids)
+    {
+        find = true;
+        car.attr('href',vehicules[obj.vehicule].img)
     }
 
     if(find==true)
@@ -101,10 +104,14 @@ function addObjUser(total,obj)
             tmp.longueur = element.longueur;
             tmp.largeur = element.largeur;
             tmp.hauteur = element.hauteur;
-            car.attr('href',vehicules[tmp.vehicule].img);
-            find=true;
             break;
         }
+    }
+
+    if(vehicules[tmp.vehicule].poids>=tmp.poids)
+    {
+        car.attr('href',vehicules[tmp.vehicule].img);
+        find=true;
     }
 
     if(find==true)
@@ -229,10 +236,12 @@ function dragObj(draw,obj)
             objCarac.id = Date.now();
             total.chargement.push(objCarac);
             // console.log(total.chargement);
+            rangeCar(total);
 
             $('.collection').append('<li class="collection-item">'+ objCarac.name +'<i class="material-icons right"  data-id="'+objCarac.id+'">close</i> <br> <span id="detail">(' + objCarac.longueur + ' x ' + objCarac.largeur + ' x ' + objCarac.hauteur + ') ' + objCarac.poids + 'kg</span></li>');
             $('[data-id="'+objCarac.id+'"]').on('click',function(){
                 total=suprObj($(this).attr('data-id'));
+                rangeCar(total);
                 // console.log(total)
             })
             $('#recap').show();
@@ -290,20 +299,8 @@ function suprObj(id)
                 total.hauteur = elt.hauteur;
             }            
         }
+        console.log(total)
 
-        // En faisant le parcours précédent on ne prends pas en compte le nouveau poids
-        for (let index = 0; index < vehicules.length; index++) {
-            // On parcours l'ensemble des véhicules enregistrés et on cherche le véhicule qui peut contenir l'objet
-            var element = vehicules[index];
-            if(element.hauteur>=total.hauteur && element.largeur>=total.largeur && element.longueur>=total.longueur && element.poids>total.poids && element.volume>=total.volume)
-            {   // Soit il existe et on change l'image et les  attributs de total
-                if(vehicules.indexOf(element)>total.vehicule) total.vehicule = vehicules.indexOf(element);
-                total.longueur = element.longueur;
-                total.largeur = element.largeur;
-                total.hauteur = element.hauteur;
-                break;
-            }
-        }
     }
     else if(total.chargement.length==1)
     {
@@ -323,8 +320,31 @@ function suprObj(id)
         total = {poids:0,volume:0,vehicule:0,longueur:0,largeur:0,hauteur:0,chargement:[]};
     }
 
-    car.attr('href',vehicules[total.vehicule].img);
+    if(vehicules[total.vehicule].poids>=total.poids)
+    {
+        car.attr('href',vehicules[total.vehicule].img);
+    }
+    else
+    {
+        car.attr('href','img/car/noCar.png');
+        draw.text('Aucun véhicule ne semble correspondre aux critères,').font({size:'20'}).move(30,300).attr('data-warning','yes');
+        draw.text('Merci de nous contacter.').font({size:'20'}).move(120,320).attr('data-warning','yes');
+    }
 
     return total;
 
+}
+
+
+function rangeCar(total)
+{
+    var poids = total.poids;
+    var car = total.vehicule;
+    var volume = total.volume;
+
+    var vehicule_poids = vehicules[car].poids;
+    var vehicule_volume = vehicules[car].volume;
+
+    $('#jauge_poids').html('Poids : ' + poids + ' / ' + vehicule_poids);
+    $('#jauge_volume').html('Volume : ' + volume + ' / ' + vehicule_volume);
 }

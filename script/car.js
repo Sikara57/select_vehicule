@@ -57,11 +57,13 @@ $(document).ready(function(){
 
         total = addObjUser(total,tmp);
         total.chargement.push(tmp);
+        rangeCar(total);
         // console.log(total.chargement);
 
         $('.collection').append('<li class="collection-item">'+ tmp.name +'<i class="material-icons right"  data-id="'+tmp.id+'">close</i> <br> <span id="detail">(' + tmp.longueur + ' x ' + tmp.largeur + ' x ' + tmp.hauteur + ') ' + tmp.poids + 'kg</span></li>');
         $('[data-id="'+tmp.id+'"]').on('click',function(){
             total=suprObj($(this).attr('data-id'));
+            rangeCar(total);
         })
         $('#recap').show();
     });
