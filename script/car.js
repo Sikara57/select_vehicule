@@ -46,6 +46,7 @@ $(document).ready(function(){
         event.preventDefault();
         nbre++;
         var tmp = {
+            id : Date.now(),
             longueur:parseFloat($('#Longueur').val()),
             largeur:parseFloat($('#Largeur').val()),
             hauteur:parseFloat($('#Hauteur').val()),

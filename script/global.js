@@ -299,7 +299,6 @@ function suprObj(id)
                 total.hauteur = elt.hauteur;
             }            
         }
-        console.log(total)
 
     }
     else if(total.chargement.length==1)
