@@ -96,7 +96,8 @@ function addObjUser(total,obj)
         var element = vehicules[index];
         if(element.hauteur>=tmp.hauteur && element.largeur>=tmp.largeur && element.longueur>=tmp.longueur && element.poids>tmp.poids && element.volume>=tmp.volume)
         {   // Soit il existe et on change l'image et les  attributs de total
-            tmp.vehicule = vehicules.indexOf(element);
+            if(vehicules.indexOf(element)>tmp.vehicule) tmp.vehicule = vehicules.indexOf(element);
+            obj.vehicule=vehicules.indexOf(element);
             tmp.longueur = element.longueur;
             tmp.largeur = element.largeur;
             tmp.hauteur = element.hauteur;
