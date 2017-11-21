@@ -8,6 +8,8 @@
     <script type="text/javascript" src="lib/svg.js"></script>
     <script type="text/javascript" src="lib/svg.draggable.js"></script>
     <script type="text/javascript" src="lib/svg.intersection.js"></script>
+    <script type="text/javascript" src="lib/raphael.min.js"></script>
+    <script type="text/javascript" src="lib/justgage.js"></script>
     <script type="text/javascript" src="data/vehicule.js"></script>
     <script type="text/javascript" src="data/objet.js"></script>
     <script type="text/javascript" src="script/global.js"></script>
@@ -38,6 +40,10 @@
                     
                 </ul>
             </div>
+            <div class="jauge">
+                <div id="jauge_poids"></div>
+                <div id="jauge_volume"></div>
+            </div>
         </div>
         <div id="myObject">
             Mon Chargement :
@@ -56,10 +62,6 @@
                 </div>
             </form>
         </div> 
-        <div class="jauge">
-            <span id="jauge_poids"></span>
-            <span id="jauge_volume"></span>
-        </div>
     </div>
 </body>
 </html>

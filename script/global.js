@@ -31,7 +31,7 @@ function addObj(total,obj)
             hauteur:vehicules[obj.vehicule].hauteur,
             chargement:total.chargement
         };
-                
+        find = true;   
     }
     else
     {
@@ -55,20 +55,16 @@ function addObj(total,obj)
                 tmp.longueur = element.longueur;
                 tmp.largeur = element.largeur;
                 tmp.hauteur = element.hauteur;
+                find = true;
                 break;
             }
         }
 
     }
 
-    if(vehicules[tmp.vehicule].poids>=tmp.poids)
-    {
-        find = true;
-        car.attr('href',vehicules[obj.vehicule].img)
-    }
-
     if(find==true)
     {
+        car.attr('href',vehicules[tmp.vehicule].img);
         return tmp;
     }
     else
@@ -131,6 +127,7 @@ function addObjUser(total,obj)
 // Fonction qui permet de déssiner les images
 function initialize(draw,type)
 {
+
     /*
         Les types de véhicules vont de 0 à 3 et le T4P est le numéro 4
     */
@@ -289,6 +286,7 @@ function suprObj(id)
             chargement:total.chargement
         };
 
+        // on recupère les caractéristiques du véhicules le plus grand
         for (let index = 0; index < total.chargement.length; index++) {
             var elt = total.chargement[index];
             if(total.vehicule<=elt.vehicule)
@@ -300,6 +298,19 @@ function suprObj(id)
             }            
         }
 
+        // On parcours l'ensemble des véhicules pour connaître le véhicule adapté
+        for (let index = 0; index < vehicules.length; index++) {
+            // On parcours l'ensemble des véhicules enregistrés et on cherche le véhicule qui peut contenir l'objet
+            var element = vehicules[index];
+            if(element.hauteur>=total.hauteur && element.largeur>=total.largeur && element.longueur>=total.longueur && element.poids>total.poids && element.volume>=total.volume)
+            {   // Soit il existe et on change l'image et les  attributs de total
+                if(vehicules.indexOf(element)>total.vehicule) total.vehicule = vehicules.indexOf(element);
+                total.longueur = element.longueur;
+                total.largeur = element.largeur;
+                total.hauteur = element.hauteur;
+                break;
+            }
+        }
     }
     else if(total.chargement.length==1)
     {
@@ -337,6 +348,9 @@ function suprObj(id)
 
 function rangeCar(total)
 {
+    $('#jauge_poids').empty();
+    $('#jauge_volume').empty();
+
     var poids = total.poids;
     var car = total.vehicule;
     var volume = total.volume;
@@ -344,6 +358,28 @@ function rangeCar(total)
     var vehicule_poids = vehicules[car].poids;
     var vehicule_volume = vehicules[car].volume;
 
-    $('#jauge_poids').html('Poids : ' + poids + ' / ' + vehicule_poids);
-    $('#jauge_volume').html('Volume : ' + volume + ' / ' + vehicule_volume);
+    var jauge_poids = new JustGage({
+        id: "jauge_poids",
+        value: poids,
+        min: 0,
+        max: vehicule_poids,
+        title: "Poids",
+        label: "",
+        levelColorsGradient: false
+      });
+    
+    var jauge_volume = new JustGage({
+        id: "jauge_volume",
+        value: volume,
+        min: 0,
+        max: vehicule_volume,
+        title: "Volume",
+        label: "",
+        levelColorsGradient: false
+      });
+
+    // $('#jauge_poids').html('Poids : ' + poids + ' / ' + vehicule_poids);
+    // $('#jauge_volume').html('Volume : ' + volume + ' / ' + vehicule_volume);
+
+
 }

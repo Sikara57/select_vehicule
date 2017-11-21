@@ -54,7 +54,7 @@
 #recap
 {
     width:200px;
-    height:408px;
+    height:260px;
     position:relative;
     left:530px;
     top:-450px;
@@ -72,6 +72,31 @@
 {
     font-size:10px;
 }
+
+.jauge
+{
+    position:relative;
+    left:530px;
+    top:-450px;
+    margin-top:10px;
+    display: inline-block;
+    background-color: white;
+}
+
+#jauge_poids
+{
+    float:left;
+    margin-left:10px;
+    width:90px;
+}
+
+#jauge_volume
+{
+    float:left;
+    margin-left:10px;
+    width:90px;
+}
+
 
 button
 {
