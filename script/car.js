@@ -45,31 +45,42 @@ $(document).ready(function(){
     $('#addObject').on('click',function(){
         event.preventDefault();
         nbre++;
-        var tmp = {
-            id : Date.now(),
-            longueur:parseFloat($('#Longueur').val()),
-            largeur:parseFloat($('#Largeur').val()),
-            hauteur:parseFloat($('#Hauteur').val()),
-            volume:parseFloat($('#Volume').val()),
-            poids:parseFloat($('#Poids').val()),
-            vehicule:0,
-            name:'Mon chargement '+ nbre
-        };
-
-        total = addObjUser(total,tmp);
-        total.chargement.push(tmp);
-        rangeCar(total);
-        // console.log(total.chargement);
-
-        $('.collection').append('<li class="collection-item">'+ tmp.name +'<i class="material-icons right"  data-id="'+tmp.id+'">close</i> <br> <span id="detail">(' + tmp.longueur + ' x ' + tmp.largeur + ' x ' + tmp.hauteur + ') ' + tmp.poids + 'kg</span></li>');
-        $('[data-id="'+tmp.id+'"]').on('click',function(){
-            total=suprObj($(this).attr('data-id'));
+        $('#error_my_object').empty();
+        var vol = parseFloat($('#Volume').val());
+        console.log(vol)
+        if(vol)
+        {
+            var tmp = {
+                id : Date.now(),
+                longueur:parseFloat($('#Longueur').val()),
+                largeur:parseFloat($('#Largeur').val()),
+                hauteur:parseFloat($('#Hauteur').val()),
+                volume:parseFloat($('#Volume').val()),
+                poids:parseFloat($('#Poids').val()),
+                vehicule:0,
+                name:'Mon chargement '+ nbre
+            };
+    
+            total = addObjUser(total,tmp);
+            total.chargement.push(tmp);
             rangeCar(total);
-        })
-        $('#recap').show();
+            // console.log(total.chargement);
+    
+            $('.collection').append('<li class="collection-item">'+ tmp.name +'<i class="material-icons right"  data-id="'+tmp.id+'">close</i> <br> <span id="detail">(' + tmp.longueur + ' x ' + tmp.largeur + ' x ' + tmp.hauteur + ') ' + tmp.poids + 'kg</span></li>');
+            $('[data-id="'+tmp.id+'"]').on('click',function(){
+                total=suprObj($(this).attr('data-id'));
+                rangeCar(total);
+            })
+            $('#recap').show();
+        }
+        else
+        {
+            $('#error_my_object').text('Seul des chiffres doivent être saisis ! Attention la virgule est un "." pas une "," !');
+        }
     });
 
     $('#Longueur,#Largeur,#Hauteur').on('change',function(){
+        $('#error_my_object').empty();
         var largeur = $('#Largeur').val();
         var longueur = $('#Longueur').val();
         var hauteur = $('#Hauteur').val();

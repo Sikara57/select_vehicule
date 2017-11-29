@@ -97,6 +97,11 @@
     width:90px;
 }
 
+#myObject div:last-child
+{
+    color:red;
+    width:100%;
+}
 
 button
 {

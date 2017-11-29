@@ -49,7 +49,7 @@ function addObj(total,obj)
         for (let index = 0; index < vehicules.length; index++) {
             // On parcours l'ensemble des véhicules enregistrés et on cherche le véhicule qui peut contenir l'objet
             var element = vehicules[index];
-            if(element.hauteur>=total.hauteur && element.largeur>=total.largeur && element.longueur>=total.longueur && element.poids>tmp.poids && element.volume>=tmp.volume)
+            if(element.hauteur>=total.hauteur && element.largeur>=total.largeur && element.longueur>=total.longueur && element.poids>=tmp.poids && element.volume>=tmp.volume)
             {   // Soit il existe et on change l'image et les  attributs de total
                 if(vehicules.indexOf(element)>tmp.vehicule) tmp.vehicule = vehicules.indexOf(element);
                 tmp.longueur = element.longueur;
@@ -93,7 +93,7 @@ function addObjUser(total,obj)
     for (let index = 0; index < vehicules.length; index++) {
         // On parcours l'ensemble des véhicules enregistrés et on cherche le véhicule qui peut contenir l'objet
         var element = vehicules[index];
-        if(element.hauteur>=tmp.hauteur && element.largeur>=tmp.largeur && element.longueur>=tmp.longueur && element.poids>tmp.poids && element.volume>=tmp.volume)
+        if(element.hauteur>=tmp.hauteur && element.largeur>=tmp.largeur && element.longueur>=tmp.longueur && element.poids>=tmp.poids && element.volume>=tmp.volume)
         {   // Soit il existe et on change l'image et les  attributs de total
             if(vehicules.indexOf(element)>tmp.vehicule) tmp.vehicule = vehicules.indexOf(element);
             obj.vehicule=vehicules.indexOf(element);
@@ -302,7 +302,7 @@ function suprObj(id)
         for (let index = 0; index < vehicules.length; index++) {
             // On parcours l'ensemble des véhicules enregistrés et on cherche le véhicule qui peut contenir l'objet
             var element = vehicules[index];
-            if(element.hauteur>=total.hauteur && element.largeur>=total.largeur && element.longueur>=total.longueur && element.poids>total.poids && element.volume>=total.volume)
+            if(element.hauteur>=total.hauteur && element.largeur>=total.largeur && element.longueur>=total.longueur && element.poids>=total.poids && element.volume>=total.volume)
             {   // Soit il existe et on change l'image et les  attributs de total
                 if(vehicules.indexOf(element)>total.vehicule) total.vehicule = vehicules.indexOf(element);
                 total.longueur = element.longueur;
