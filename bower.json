@@ -1,0 +1,24 @@
+{
+  "name": "select_vehicule",
+  "homepage": "https://github.com/Sikara57/select_vehicule",
+  "authors": [
+    "sikara <sikara57@gmail.com>"
+  ],
+  "description": "module selection vehicule",
+  "main": "index.html",
+  "keywords": [
+    "svg;vehicule"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "svg.js": "^2.6.3",
+    "svg.draggable.js": "^2.2.1"
+  }
+}

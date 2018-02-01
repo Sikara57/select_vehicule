@@ -1,7 +1,7 @@
 $(document).ready(function(){
     var nbre = 0;
 
-    draw = SVG('drawing').size(500,400);
+    draw = SVG('drawing').size('100%','100%');
     $('#myObject').hide();
     $('#recap').hide();
 
